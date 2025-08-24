@@ -41,8 +41,7 @@
           "microphonePermission": "Allow Vehicle Detector to access your microphone for video recording.",
           "recordAudioAndroid": true
         }
-      ],
-      "expo-splash-screen"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

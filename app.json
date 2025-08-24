@@ -7,10 +7,6 @@
     "scheme": "vehicledetector",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#2196F3"
-    },
     "ios": {
       "supportsTablet": true,
       "infoPlist": {

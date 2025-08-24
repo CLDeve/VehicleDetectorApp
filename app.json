@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Vehicle Detector",
+    "slug": "vehicle-detector-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "vehicledetector",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#2196F3"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to detect and count vehicles in real-time using AI technology.",
+        "NSPhotoLibraryUsageDescription": "This app saves captured photos to your photo library for vehicle detection analysis."
+      }
+    },
+    "android": {
+      "package": "com.certis.vehicledetectorapp",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Vehicle Detector to access your camera to detect vehicles.",
+          "microphonePermission": "Allow Vehicle Detector to access your microphone for video recording.",
+          "recordAudioAndroid": true
+        }
+      ],
+      "expo-splash-screen"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

@@ -1,0 +1,90 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Setup Java JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
+      
+    - name: Setup Expo CLI
+      run: npm install -g @expo/cli
+      
+    - name: Prebuild for Android
+      run: npx expo prebuild --platform android --clear
+      
+    - name: Make gradlew executable
+      run: chmod +x android/gradlew
+      
+    - name: Build APK
+      run: cd android && ./gradlew assembleRelease
+      
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: vehicle-detector-app
+        path: android/app/build/outputs/apk/release/app-release.apk
+        
+    - name: Create Release
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Vehicle Detector App v${{ github.run_number }}
+        body: |
+          🚗 Vehicle Detection App - Build ${{ github.run_number }}
+          
+          ## Features
+          - 🤖 AI-powered vehicle detection (cars, buses, trucks, motorcycles, bicycles, vans)
+          - 📊 Real-time vehicle counting and statistics
+          - 📄 License plate recognition
+          - 📱 Cross-platform mobile app
+          
+          ## Installation
+          1. Download the APK file below
+          2. Install on Android device (enable "Unknown Sources" if needed)
+          3. Grant camera permissions when prompted
+          4. Start detecting vehicles!
+          
+          Built with: React Native, Expo, TensorFlow.js
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: android/app/build/outputs/apk/release/app-release.apk
+        asset_name: VehicleDetectorApp-v${{ github.run_number }}.apk
+        asset_content_type: application/vnd.android.package-archive

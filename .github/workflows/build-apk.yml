@@ -37,10 +37,13 @@ jobs:
       run: npm install -g @expo/cli
       
     - name: Prebuild for Android
-      run: npx expo prebuild --platform android
+      run: npx expo prebuild --platform android --clean
       
     - name: Make gradlew executable
       run: chmod +x android/gradlew
+      
+    - name: Clean Android build
+      run: cd android && ./gradlew clean
       
     - name: Build APK
       run: cd android && ./gradlew assembleRelease
